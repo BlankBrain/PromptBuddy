@@ -44,6 +44,18 @@ class PromptViewModel: ObservableObject {
             }
     }
     
+    var favoritePrompts: [Prompt] {
+        prompts.filter { $0.isFavorite }
+            .sorted { $0.name < $1.name }
+    }
+    
+    func toggleFavorite(_ prompt: Prompt) {
+        if let index = prompts.firstIndex(where: { $0.id == prompt.id }) {
+            prompts[index].isFavorite.toggle()
+            savePrompts()
+        }
+    }
+    
     func addCategory(_ category: String) {
         let trimmed = category.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty, !categories.contains(trimmed) else { return }

@@ -14,6 +14,20 @@ struct PromptDetailView: View {
         ScrollView {
             if let prompt = prompt {
                 VStack(alignment: .leading, spacing: 20) {
+                    HStack {
+                        Text("Prompt Details")
+                            .font(.title)
+                            .bold()
+                        Spacer()
+                        Button {
+                            viewModel.toggleFavorite(prompt)
+                        } label: {
+                            Image(systemName: prompt.isFavorite ? "star.fill" : "star")
+                                .foregroundColor(prompt.isFavorite ? .yellow : .gray)
+                                .imageScale(.large)
+                        }
+                        .buttonStyle(.plain)
+                    }
                     if isEditing {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Name")
