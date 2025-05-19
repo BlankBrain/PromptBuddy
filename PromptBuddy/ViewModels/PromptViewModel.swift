@@ -87,6 +87,14 @@ class PromptViewModel: ObservableObject {
         savePrompts()
     }
     
+    /// Delete a category and all prompts in that category
+    func deleteCategoryAndPrompts(_ category: String) {
+        prompts.removeAll { $0.category == category }
+        categories.removeAll { $0 == category }
+        savePrompts()
+        saveCategories()
+    }
+    
     func duplicatePrompt(_ prompt: Prompt) {
         var newPrompt = prompt
         newPrompt.id = UUID()
