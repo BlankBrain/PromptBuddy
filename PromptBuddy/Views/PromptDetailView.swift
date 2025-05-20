@@ -27,16 +27,26 @@ struct PromptDetailView: View {
             
             ZStack(alignment: .topTrailing) {
                 // Glassmorphic card background
+                #if os(macOS)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(AppColors.listBackground.opacity(0.98))
+                    .shadow(color: .black.opacity(0.10), radius: 24, x: 0, y: 12)
+                #else
                 RoundedRectangle(cornerRadius: 32, style: .continuous)
                     .fill(AppColors.listBackground.opacity(0.95))
                     .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 8)
+                #endif
                 
                 VStack(alignment: .leading, spacing: 20) {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 8) {
                             // Title
                             Text("Prompt Details")
+                                #if os(macOS)
+                                .font(.system(size: 32, weight: .bold, design: .rounded))
+                                #else
                                 .font(.system(size: 26, weight: .bold, design: .rounded))
+                                #endif
                                 .foregroundColor(AppColors.primary)
                             // Category badge
                             if let prompt = prompt {
@@ -56,13 +66,17 @@ struct PromptDetailView: View {
                         Spacer()
                         // Delete button
                         if let prompt = prompt {
-                            HStack(spacing: 12) {
+                            HStack(spacing: 16) {
                                 Button {
                                     showDeleteAlert = true
                                 } label: {
                                     Image(systemName: "trash")
                                         .foregroundColor(.red)
+                                        #if os(macOS)
+                                        .font(.system(size: 32))
+                                        #else
                                         .font(.system(size: 26))
+                                        #endif
                                 }
                                 .buttonStyle(.plain)
                                 // Favorite star
@@ -71,7 +85,11 @@ struct PromptDetailView: View {
                                 } label: {
                                     Image(systemName: prompt.isFavorite ? "star.fill" : "star")
                                         .foregroundColor(.yellow)
+                                        #if os(macOS)
+                                        .font(.system(size: 34))
+                                        #else
                                         .font(.system(size: 28))
+                                        #endif
                                         .shadow(radius: 2)
                                 }
                                 .buttonStyle(.plain)
@@ -90,7 +108,11 @@ struct PromptDetailView: View {
                                     set: { editedPrompt?.name = $0 }
                                 ))
                                 .textFieldStyle(.roundedBorder)
+                                #if os(macOS)
+                                .font(.system(size: 20, weight: .regular, design: .default))
+                                #else
                                 .font(AppFonts.label)
+                                #endif
                                 
                                 Text("Prompt Content")
                                     .font(.caption)
@@ -110,7 +132,11 @@ struct PromptDetailView: View {
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Text(prompt.name)
+                                    #if os(macOS)
+                                    .font(.system(size: 20, weight: .regular, design: .default))
+                                    #else
                                     .font(AppFonts.label)
+                                    #endif
                                     .foregroundColor(AppColors.label)
                                 
                                 Text("Prompt Content")
@@ -126,7 +152,7 @@ struct PromptDetailView: View {
                             }
                         }
                         Divider()
-                        HStack(spacing: 16) {
+                        HStack(spacing: 20) {
                             if isEditing {
                                 Button("Save") {
                                     if var updated = editedPrompt {
@@ -137,17 +163,26 @@ struct PromptDetailView: View {
                                 }
                                 .buttonStyle(.borderedProminent)
                                 .tint(AppColors.button)
+                                #if os(macOS)
+                                .font(.system(size: 18, weight: .medium))
+                                #endif
                                 Button("Cancel") {
                                     isEditing = false
                                     editedPrompt = nil
                                 }
                                 .buttonStyle(.bordered)
+                                #if os(macOS)
+                                .font(.system(size: 18, weight: .medium))
+                                #endif
                             } else {
                                 Button("Edit") {
                                     editedPrompt = prompt
                                     isEditing = true
                                 }
                                 .buttonStyle(.bordered)
+                                #if os(macOS)
+                                .font(.system(size: 18, weight: .medium))
+                                #endif
                                 Button("Copy to Clipboard") {
                                     #if os(macOS)
                                     NSPasteboard.general.clearContents()
@@ -157,6 +192,9 @@ struct PromptDetailView: View {
                                     #endif
                                 }
                                 .buttonStyle(.bordered)
+                                #if os(macOS)
+                                .font(.system(size: 18, weight: .medium))
+                                #endif
                             }
                         }
                     } else {
@@ -164,10 +202,20 @@ struct PromptDetailView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                #if os(macOS)
+                .padding(36)
+                #else
                 .padding(28)
+                #endif
             }
+            #if os(macOS)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 32)
+            .frame(minWidth: 500, minHeight: 400)
+            #else
             .padding(.horizontal, 8)
             .padding(.vertical, 24)
+            #endif
             // Dynamic sheet sizing for iOS 16+
             .ifAvailableiOS16 { view in
                 view.presentationDetents([.medium, .large])
